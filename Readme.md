@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Федор Сариев](https://up.htmlacademy.ru/javascript/15/user/835625).
-* Наставник: `Неизвестно`.
+* Наставник: `Денис Байдаро`.
 
 ---
 
