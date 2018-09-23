@@ -2,10 +2,9 @@
 
 var numbersOfOffers = 8;
 var width = 600;
-var height = 350;
 var avatars = [1, 2, 3, 4, 5, 6, 7, 8];
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var types = ['palace', 'flat', 'house', 'bungalo'];
+var types = {'palace': 'дворец', 'flat': 'квартира', 'house': 'дом', 'bungalo': 'бунгало'};
 var checkins = ['12:00', '13:00', '14:00'];
 var checkouts = ['12:00', '13:00', '14:00'];
 var someFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -16,6 +15,17 @@ var getElement = function (someElement) {
   return random;
 };
 
+
+var getFewElements = function (array) {
+  var number = Math.floor(Math.random() * (array.length - 1) + 1);
+  var staff = [];
+  for (var j = 0; j < number; j++) {
+    staff.push(getElement(array));
+  }
+  return staff;
+};
+
+
 var getRandom = function compareRandom() {
   return Math.random() - 0.5;
 };
@@ -23,14 +33,16 @@ var getRandom = function compareRandom() {
 var offers = [];
 
 var getOffers = function () {
-  avatars.sort(getRandom);
-  titles.sort(getRandom);
   for (var i = 0; i < numbersOfOffers; i++) {
+    avatars.sort(getRandom);
+    titles.sort(getRandom);
+    somePhotos.sort(getRandom);
     var localX = Math.floor(Math.random() * (width));
-    var localY = Math.floor(Math.random() * (height));
+    var localY = Math.floor(Math.random() * (630 - 130) + 130);
     var Price = Math.floor(Math.random() * (1000000 - 1000) + 1000);
     var roomsNumber = Math.floor(Math.random() * (4 - 1) + 1);
     var guestsNumber = Math.floor(Math.random() * (10));
+    var getType = types[Object.keys(types)[Math.floor(Math.random() * (Object.keys(types).length))]];
     var array = {
       'author': {
         'avatar': 'img/avatars/user0' + avatars[i] + '.png'
@@ -39,14 +51,14 @@ var getOffers = function () {
         'title': titles[i],
         'address': localX + ',' + localY,
         'price': Price,
-        'type': getElement(types),
+        'type': getType,
         'rooms': roomsNumber,
         'guests': guestsNumber,
         'checkin': getElement(checkins),
         'checkout': getElement(checkouts),
-        'features': getElement(someFeatures),
+        'features': getFewElements(someFeatures),
         'description': '',
-        'photos': getElement(somePhotos),
+        'photos': [somePhotos[0], somePhotos[1], somePhotos[2]],
       },
       'location': {
         'x': localX,
@@ -66,6 +78,7 @@ var templatePinAttributes = templatePin.content.querySelector('.map__pin');
 var mapOffersListElement = document.querySelector('.map__filters-container');
 var templatecard = document.querySelector('#card').content.querySelector('.map__card');
 
+
 var renderOffer = function (protoPin) {
   var offerAtt = templatecard.cloneNode(true);
 
@@ -75,10 +88,22 @@ var renderOffer = function (protoPin) {
   offerAtt.querySelector('.popup__type').innerHTML = protoPin.offer.type;
   offerAtt.querySelector('.popup__text--capacity').innerHTML = protoPin.offer.rooms + ' комнаты для ' + protoPin.offer.guests + ' гостей';
   offerAtt.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + protoPin.offer.checkin + ', выезд до ' + protoPin.offer.checkout;
-  offerAtt.querySelector('.popup__features').innerHTML = protoPin.offer.features;
+  offerAtt.querySelector('.popup__features').createElement = protoPin.offer.features;
   offerAtt.querySelector('.popup__description').innerHTML = protoPin.offer.description;
-  offerAtt.querySelector('.popup__photos').innerHTML = protoPin.offer.photos;
+  var someFragment = document.createDocumentFragment();
+
+  for (var m = 0; m < 3; m++) {
+    var img = document.createElement('img');
+    img.src = protoPin.offer.photos[m];
+    img.width = '45';
+    img.height = '40';
+    img.alt = 'Фотография жилья';
+    someFragment.appendChild(img);
+  }
+
+  offerAtt.querySelector('.popup__photos').appendChild(someFragment);
   offerAtt.querySelector('.popup__avatar').innerHTML = protoPin.author.avatar;
+  offerAtt.querySelector('.popup__photos img:first-child').remove();
   return offerAtt;
 };
 
