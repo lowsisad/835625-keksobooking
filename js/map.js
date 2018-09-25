@@ -13,9 +13,9 @@ var maxGuests = 10;
 
 var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var TYPES = {'palace': 'дворец',
- 'flat': 'квартира',
- 'house': 'дом',
- 'bungalo': 'бунгало'
+  'flat': 'квартира',
+  'house': 'дом',
+  'bungalo': 'бунгало'
 };
 var CHECKINS = ['12:00', '13:00', '14:00'];
 var CHECKOUTS = ['12:00', '13:00', '14:00'];
@@ -27,22 +27,25 @@ var getElement = function (someElement) {
   return random;
 };
 
-function getShuffle(arr){
-	var j, temp;
-	for(var i = arr.length - 1; i > 0; i--){
-		j = Math.floor(Math.random()*(i + 1));
-		temp = arr[j];
-		arr[j] = arr[i];
-		arr[i] = temp;
-	}
-	return arr;
+function getShuffle(arr) {
+  var j;
+  var temp;
+  for (var i = arr.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = arr[j];
+    arr[j] = arr[i];
+    arr[i] = temp;
+  }
+  return arr;
 }
 
-var getAvatars = function (){
+var getAvatars = function () {
   var r = [];
-  for (var i = 1; i <= 8; i++) r.push(i);
+  for (var i = 1; i <= 8; i++) {
+    r.push(i);
+  }
   return r;
-}
+};
 
 var avatars = getAvatars();
 
