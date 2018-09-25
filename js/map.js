@@ -1,8 +1,5 @@
 'use strict';
 
-var numbersOfOffers = 8;
-var width = 600;
-
 var maxCost = 1000000;
 var minCost = 1000;
 var maxLocalY = 630;
@@ -10,7 +7,7 @@ var minLocalY = 130;
 var maxRooms = 4;
 var minRooms = 1;
 var maxGuests = 10;
-
+var countOfImg = 3;
 var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var TYPES = {'palace': 'дворец',
   'flat': 'квартира',
@@ -60,11 +57,11 @@ var getFewElements = function (array) {
 
 var getOffers = function () {
   var offers = [];
-  for (var i = 0; i < numbersOfOffers; i++) {
+  for (var i = 0; i < avatars.length; i++) {
     avatars = getShuffle(avatars);
     TITLES = getShuffle(TITLES);
     SOMEPHOTOS = getShuffle(SOMEPHOTOS);
-    var localX = Math.floor(Math.random() * (width));
+    var localX = Math.floor(Math.random() * (document.documentElement.clientWidth));
     var localY = Math.floor(Math.random() * (maxLocalY - minLocalY) + minLocalY);
     var Price = Math.floor(Math.random() * (maxCost - minCost) + minCost);
     var roomsNumber = Math.floor(Math.random() * (maxRooms - minRooms) + minRooms);
@@ -115,11 +112,23 @@ var renderOffer = function (protoPin) {
   offerAtt.querySelector('.popup__type').innerHTML = protoPin.offer.type;
   offerAtt.querySelector('.popup__text--capacity').innerHTML = protoPin.offer.rooms + ' комнаты для ' + protoPin.offer.guests + ' гостей';
   offerAtt.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + protoPin.offer.checkin + ', выезд до ' + protoPin.offer.checkout;
-  offerAtt.querySelector('.popup__features').createElement = protoPin.offer.features;
+  // offerAtt.querySelector('.popup__features').createElement = protoPin.offer.features;
   offerAtt.querySelector('.popup__description').innerHTML = protoPin.offer.description;
-  for (var m = 0; m < 3; m++) {
+
+  var myNode = offerAtt.querySelector('.popup__features');
+  while (myNode.firstChild) {
+    myNode.removeChild(myNode.firstChild);
+  }
+
+  for (var m = 0; m < protoPin.offer.features.length; m++) {
+    var li = document.createElement('li');
+    li.classList.add('popup__feature');
+    li.classList.add('popup__feature--' + protoPin.offer.features[m]);
+    offerAtt.querySelector('.popup__features').appendChild(li);
+  }
+  for (var k = 0; k < countOfImg; k++) {
     var img = document.createElement('img');
-    img.src = protoPin.offer.photos[m];
+    img.src = protoPin.offer.photos[k];
     img.width = '45';
     img.height = '40';
     img.classList.add('popup__photo');
