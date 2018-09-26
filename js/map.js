@@ -57,10 +57,10 @@ var getFewElements = function (array) {
 
 var getOffers = function () {
   var offers = [];
+  avatars = getShuffle(avatars);
+  TITLES = getShuffle(TITLES);
+  SOMEPHOTOS = getShuffle(SOMEPHOTOS);
   for (var i = 0; i < avatars.length; i++) {
-    avatars = getShuffle(avatars);
-    TITLES = getShuffle(TITLES);
-    SOMEPHOTOS = getShuffle(SOMEPHOTOS);
     var localX = Math.floor(Math.random() * (document.documentElement.clientWidth));
     var localY = Math.floor(Math.random() * (maxLocalY - minLocalY) + minLocalY);
     var Price = Math.floor(Math.random() * (maxCost - minCost) + minCost);
