@@ -49,11 +49,16 @@ var avatars = getAvatars();
 
 var getFewElements = function (array) {
   var number = Math.floor(Math.random() * (array.length - 1) + 1);
-  var staff = [];
-  for (var j = 0; j < number; j++) {
-    staff.push(getElement(array));
+  var j;
+  var temp;
+  for (var i = array.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = array[j];
+    array[j] = array[i];
+    array[i] = temp;
   }
-  return staff;
+  array = array.slice(number);
+  return array;
 };
 
 var getOffers = function () {
@@ -113,7 +118,6 @@ var renderOffer = function (protoPin) {
   offerAtt.querySelector('.popup__type').innerHTML = protoPin.offer.type;
   offerAtt.querySelector('.popup__text--capacity').innerHTML = protoPin.offer.rooms + ' комнаты для ' + protoPin.offer.guests + ' гостей';
   offerAtt.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + protoPin.offer.checkin + ', выезд до ' + protoPin.offer.checkout;
-  // offerAtt.querySelector('.popup__features').createElement = protoPin.offer.features;
   offerAtt.querySelector('.popup__description').innerHTML = protoPin.offer.description;
 
   var myNode = offerAtt.querySelector('.popup__features');
