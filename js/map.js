@@ -2,6 +2,7 @@
 
 var maxCost = 1000000;
 var minCost = 1000;
+var maxLocalX = 1000;
 var maxLocalY = 630;
 var minLocalY = 130;
 var maxRooms = 4;
@@ -61,7 +62,7 @@ var getOffers = function () {
   TITLES = getShuffle(TITLES);
   SOMEPHOTOS = getShuffle(SOMEPHOTOS);
   for (var i = 0; i < avatars.length; i++) {
-    var localX = Math.floor(Math.random() * (document.documentElement.clientWidth));
+    var localX = Math.floor(Math.random() * (maxLocalX));
     var localY = Math.floor(Math.random() * (maxLocalY - minLocalY) + minLocalY);
     var Price = Math.floor(Math.random() * (maxCost - minCost) + minCost);
     var roomsNumber = Math.floor(Math.random() * (maxRooms - minRooms) + minRooms);
@@ -156,8 +157,10 @@ var fragmentWithOffers = document.createDocumentFragment();
 for (var i = 0; i < offers.length; i++) {
 
   fragmentWithPins.appendChild(renderPin(offers[i]));
-  fragmentWithOffers.appendChild(renderOffer(offers[i]));
+
 }
+
+fragmentWithOffers.appendChild(renderOffer(offers[0]));
 mapPinsListElement.appendChild(fragmentWithPins);
 mapOffersListElement.appendChild(fragmentWithOffers);
 
