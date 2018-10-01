@@ -165,9 +165,62 @@ for (var i = 0; i < offers.length; i++) {
 }
 
 fragmentWithOffers.appendChild(renderOffer(offers[0]));
-mapPinsListElement.appendChild(fragmentWithPins);
-mapOffersListElement.appendChild(fragmentWithOffers);
 
-var userDialog = document.querySelector('.map');
-userDialog.classList.remove('map--faded');
+var openForm = document.querySelector('.ad-form');
+var turnOn = document.querySelector('.map__pin--main');
+var mainPin = document.querySelector('.map');
 
+// mapOffersListElement.appendChild(fragmentWithOffers);
+
+turnOn.addEventListener('mouseup', function () {
+  if (event.which == 1){
+    mainPin.classList.remove('map--faded');
+    openForm.classList.remove('ad-form--disabled');
+    mapPinsListElement.appendChild(fragmentWithPins);
+  }
+});
+
+var typeOfHouse = document.querySelector('#type');
+
+typeOfHouse.addEventListener('change', function(){
+  if (typeOfHouse.value == 'flat'){
+    document.querySelector('#price').min="1000";
+  }
+  if (typeOfHouse.value == 'palace'){
+    document.querySelector('#price').min="10000";
+  }
+  if (typeOfHouse.value == 'house'){
+    document.querySelector('#price').min="5000";
+  }
+  if (typeOfHouse.value == 'bungalo'){
+    document.querySelector('#price').min="0";
+  }
+});
+
+var address = document.querySelector('#address');
+
+document.querySelector('#address').value='left:'+ turnOn.style.left +'; top:'+ turnOn.style.top;
+
+var cleanUpForm = document.querySelector('.ad-form__reset');
+
+cleanUpForm.addEventListener('click', function () {
+  document.querySelector('.ad-form').reset;
+});
+
+var mapPins = document.querySelector('.map__pins');
+
+// console.log(mapPinsListElement);
+mapPins.addEventListener('click', function (event) {
+  var target = event.target;
+  var img = target.closest('img');
+  if (!img) return;
+  console.log(target.parentNode);
+  console.log(mapPinsListElement.);
+  // console.log(offers[0].author.avatar);
+  // for ( var n = 0 ; n < offers.length; n++){
+    // if (offers[n].author.avatar == target) {
+      // console.log(offers[n].author.avatar);
+      // console.log(target);
+    // }
+  // }
+});
