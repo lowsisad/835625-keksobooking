@@ -207,7 +207,9 @@ mapPins.addEventListener('click', function (event) {
   } else {
     var offerId = target.id;
     fragmentWithOffers.appendChild(renderOffer(offers[offerId]));
-    document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+    if (document.querySelector('.map__filters-container').childElementCount > 0) {
+      document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+    }
     mapOffersListElement.appendChild(fragmentWithOffers);
   }
   var closeOffer = document.querySelector('.popup__close');
