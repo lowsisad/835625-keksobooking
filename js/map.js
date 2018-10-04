@@ -202,9 +202,7 @@ var mapPins = document.querySelector('.map__pins');
 
 mapPins.addEventListener('click', function (event) {
   var target = event.target;
-  if (!target.tagName === 'IMG' || !target.tagName === 'BUTTON') {
-    return;
-  } else {
+  if (target.tagName === 'IMG' || target.tagName === 'BUTTON') {
     var offerId = target.id;
     fragmentWithOffers.appendChild(renderOffer(offers[offerId]));
     if (document.querySelector('.map__filters-container').childElementCount > 0) {
@@ -218,15 +216,38 @@ mapPins.addEventListener('click', function (event) {
     document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
   });
 
-
+});
 
 var roomNumber = document.querySelector('#room_number');
 var maxGuest = document.querySelector('#capacity');
 
 roomNumber.addEventListener('change', function () {
   if (roomNumber.value === '1') {
-    console.log('123sdsad');
+    maxGuest.options[0].disabled = true;
+    maxGuest.options[1].disabled = true;
+    maxGuest.options[2].disabled = false;
+    maxGuest.options[3].disabled = true;
+    maxGuest.value = 1;
   }
-});
-
+  if (roomNumber.value === '2') {
+    maxGuest.options[0].disabled = true;
+    maxGuest.options[1].disabled = false;
+    maxGuest.options[2].disabled = false;
+    maxGuest.options[3].disabled = true;
+    maxGuest.value = 1;
+  }
+  if (roomNumber.value === '3') {
+    maxGuest.options[0].disabled = false;
+    maxGuest.options[1].disabled = false;
+    maxGuest.options[2].disabled = false;
+    maxGuest.options[3].disabled = true;
+    maxGuest.value = 1;
+  }
+  if (roomNumber.value === '100') {
+    maxGuest.options[0].disabled = true;
+    maxGuest.options[1].disabled = true;
+    maxGuest.options[2].disabled = true;
+    maxGuest.options[3].disabled = false;
+    maxGuest.value = 0;
+  }
 });
