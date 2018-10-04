@@ -218,4 +218,15 @@ mapPins.addEventListener('click', function (event) {
     document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
   });
 
+
+
+var roomNumber = document.querySelector('#room_number');
+var maxGuest = document.querySelector('#capacity');
+
+roomNumber.addEventListener('change', function () {
+  if (roomNumber.value === '1') {
+    console.log('123sdsad');
+  }
+});
+
 });
