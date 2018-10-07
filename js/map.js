@@ -1,5 +1,6 @@
 'use strict';
 
+var ESC = 27;
 var maxCost = 1000000;
 var minCost = 1000;
 var maxLocalX = 1000;
@@ -171,12 +172,15 @@ var openForm = document.querySelector('.ad-form');
 var turnOn = document.querySelector('.map__pin--main');
 var mainPin = document.querySelector('.map');
 
+var turnOnTheLight = function () {
+  mainPin.classList.remove('map--faded');
+  openForm.classList.remove('ad-form--disabled');
+  mapPinsListElement.appendChild(fragmentWithPins);
+  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(e => e.style.display = 'block');
+}
+
 turnOn.addEventListener('mouseup', function () {
-  if (event.which === 1) {
-    mainPin.classList.remove('map--faded');
-    openForm.classList.remove('ad-form--disabled');
-    mapPinsListElement.appendChild(fragmentWithPins);
-  }
+  turnOnTheLight ();
 });
 
 var typeOfHouse = document.querySelector('#type');
@@ -196,7 +200,22 @@ typeOfHouse.addEventListener('change', function () {
   }
 });
 
-document.querySelector('#address').value = 'left:' + turnOn.style.left + '; top:' + turnOn.style.top;
+var resetForm = document.querySelector('.ad-form__reset');
+var allPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+resetForm.addEventListener('click', function () {
+  document.querySelector('#address').value = turnOn.style.left + ' ' + turnOn.style.top;
+  document.querySelector('#title').value = '';
+  document.querySelector('#price').value = '';
+  document.querySelector('#type').value = 'flat';
+  document.querySelector('#room_number').value = '1';
+  document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+  mainPin.classList.add('map--faded');
+  openForm.classList.add('ad-form--disabled');
+  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(e => e.style.display = 'none');
+});
+
+document.querySelector('#address').value = turnOn.style.left + ' ' + turnOn.style.top;
 
 var mapPins = document.querySelector('.map__pins');
 
@@ -251,3 +270,49 @@ roomNumber.addEventListener('change', function () {
     maxGuest.value = 0;
   }
 });
+
+var timein = document.querySelector('#timein');
+var timeout = document.querySelector('#timeout');
+
+timein.addEventListener('change', function () {
+  timeout.value = timein.value;
+});
+
+timeout.addEventListener('change', function () {
+  timein.value = timeout.value;
+});
+
+var tempSuccess = document.querySelector('#success');
+var success = tempSuccess.content.querySelector('.success');
+
+
+var submitForm = document.querySelector('.ad-form__submit');
+submitForm.addEventListener('click', function () {
+  if (!validate_form()) {
+    document.querySelector('#address').value = turnOn.style.left + ' ' + turnOn.style.top;
+    document.querySelector('#title').value = '';
+    document.querySelector('#price').value = '';
+    document.querySelector('#type').value = 'flat';
+    document.querySelector('#room_number').value = '1';
+    document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+    mainPin.classList.add('map--faded');
+    openForm.classList.add('ad-form--disabled');
+    document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(e => e.style.display = 'none');
+    document.querySelector('main').appendChild(success.cloneNode(true));
+    document.querySelector('main .success').setAttribute('tabindex', 0);
+    document.querySelector('main .success').tabIndex;
+
+    document.querySelector('main .success').addEventListener('click', function () {
+      document.querySelector('main .success').remove();
+      turnOnTheLight();
+    });
+
+    document.querySelector('main .success').addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ESC) {
+        document.querySelector('main .success').remove();
+        turnOnTheLight();
+      }
+    });
+  }
+});
+
