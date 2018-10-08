@@ -150,7 +150,9 @@ var renderOffer = function (protoOffer) {
   return offerAtt;
 };
 
-document.querySelectorAll('.ad-form__element').forEach(e => e.disabled = 'true');
+document.querySelectorAll('.ad-form__element').forEach(function (formEl) {
+  formEl.disabled = 'true';
+});
 
 var renderPin = function (protoPin) {
   var pinAtt = templatePinAttributes.cloneNode(true);
@@ -178,12 +180,16 @@ var turnOnTheLight = function () {
   mainPin.classList.remove('map--faded');
   openForm.classList.remove('ad-form--disabled');
   mapPinsListElement.appendChild(fragmentWithPins);
-  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(e => e.style.display = 'block');
-  document.querySelectorAll('.ad-form__element').forEach(e => e.removeAttribute('disabled'));
-}
+  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (formEl) {
+    formEl.style.display = 'block';
+  });
+  document.querySelectorAll('.ad-form__element').forEach(function (formEl) {
+    formEl.removeAttribute('disabled');
+  });
+};
 
 turnOn.addEventListener('mouseup', function () {
-  turnOnTheLight ();
+  turnOnTheLight();
 });
 
 var typeOfHouse = document.querySelector('#type');
@@ -208,7 +214,6 @@ typeOfHouse.addEventListener('change', function () {
 });
 
 var resetForm = document.querySelector('.ad-form__reset');
-var allPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
 resetForm.addEventListener('click', function () {
   document.querySelector('#address').value = parseInt(turnOn.style.left, 10) + ' ' + parseInt(turnOn.style.top, 10);
@@ -219,7 +224,9 @@ resetForm.addEventListener('click', function () {
   document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
   mainPin.classList.add('map--faded');
   openForm.classList.add('ad-form--disabled');
-  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(e => e.style.display = 'none');
+  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (formEl) {
+    formEl.style.display = 'none';
+  });
 });
 
 document.querySelector('#address').value = parseInt(turnOn.style.left, 10) + ' ' + parseInt(turnOn.style.top, 10);
@@ -295,32 +302,33 @@ var success = tempSuccess.content.querySelector('.success');
 
 var submitForm = document.querySelector('.ad-form__submit');
 submitForm.addEventListener('click', function () {
-  if (!validate_form()) {
-    document.querySelector('#address').value = parseInt(turnOn.style.left, 10) + ' ' + parseInt(turnOn.style.top, 10);
-    document.querySelector('#title').value = '';
-    document.querySelector('#price').value = '';
-    document.querySelector('#type').value = 'flat';
-    document.querySelector('#room_number').value = '1';
-    document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
-    mainPin.classList.add('map--faded');
-    openForm.classList.add('ad-form--disabled');
-    document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(e => e.style.display = 'none');
-    document.querySelector('main').appendChild(success.cloneNode(true));
-    document.querySelector('main .success').setAttribute('tabindex', 0);
-    document.querySelectorAll('.ad-form__element').forEach(e => e.disabled = 'true');
-    document.querySelector('main .success').tabIndex;
+  document.querySelector('#address').value = parseInt(turnOn.style.left, 10) + ' ' + parseInt(turnOn.style.top, 10);
+  document.querySelector('#title').value = '';
+  document.querySelector('#price').value = '';
+  document.querySelector('#type').value = 'flat';
+  document.querySelector('#room_number').value = '1';
+  document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+  mainPin.classList.add('map--faded');
+  openForm.classList.add('ad-form--disabled');
+  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (formEl) {
+    formEl.style.display = 'none';
+  });
+  document.querySelector('main').appendChild(success.cloneNode(true));
+  document.querySelector('main .success').setAttribute('tabindex', 0);
+  document.querySelectorAll('.ad-form__element').forEach(function (formEl) {
+    formEl.disabled = 'true';
+  });
 
-    document.querySelector('main .success').addEventListener('click', function () {
+  document.querySelector('main .success').addEventListener('click', function () {
+    document.querySelector('main .success').remove();
+    turnOnTheLight();
+  });
+
+  document.querySelector('main .success').addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC) {
       document.querySelector('main .success').remove();
       turnOnTheLight();
-    });
-
-    document.querySelector('main .success').addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ESC) {
-        document.querySelector('main .success').remove();
-        turnOnTheLight();
-      }
-    });
-  }
+    }
+  });
 });
 
