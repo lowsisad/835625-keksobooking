@@ -1,5 +1,6 @@
 'use strict';
 
+var ESC = 27;
 var maxCost = 1000000;
 var minCost = 1000;
 var maxLocalX = 1000;
@@ -149,6 +150,10 @@ var renderOffer = function (protoOffer) {
   return offerAtt;
 };
 
+document.querySelectorAll('.ad-form__element').forEach(function (formEl) {
+  formEl.disabled = 'true';
+});
+
 var renderPin = function (protoPin) {
   var pinAtt = templatePinAttributes.cloneNode(true);
 
@@ -171,12 +176,20 @@ var openForm = document.querySelector('.ad-form');
 var turnOn = document.querySelector('.map__pin--main');
 var mainPin = document.querySelector('.map');
 
+var turnOnTheLight = function () {
+  mainPin.classList.remove('map--faded');
+  openForm.classList.remove('ad-form--disabled');
+  mapPinsListElement.appendChild(fragmentWithPins);
+  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (formEl) {
+    formEl.style.display = 'block';
+  });
+  document.querySelectorAll('.ad-form__element').forEach(function (formEl) {
+    formEl.removeAttribute('disabled');
+  });
+};
+
 turnOn.addEventListener('mouseup', function () {
-  if (event.which === 1) {
-    mainPin.classList.remove('map--faded');
-    openForm.classList.remove('ad-form--disabled');
-    mapPinsListElement.appendChild(fragmentWithPins);
-  }
+  turnOnTheLight();
 });
 
 var typeOfHouse = document.querySelector('#type');
@@ -184,27 +197,45 @@ var typeOfHouse = document.querySelector('#type');
 typeOfHouse.addEventListener('change', function () {
   if (typeOfHouse.value === 'flat') {
     document.querySelector('#price').min = '1000';
+    document.querySelector('#price').placeholder = '1000';
   }
   if (typeOfHouse.value === 'palace') {
     document.querySelector('#price').min = '10000';
+    document.querySelector('#price').placeholder = '10000';
   }
   if (typeOfHouse.value === 'house') {
     document.querySelector('#price').min = '5000';
+    document.querySelector('#price').placeholder = '5000';
   }
   if (typeOfHouse.value === 'bungalo') {
     document.querySelector('#price').min = '0';
+    document.querySelector('#price').placeholder = '0';
   }
 });
 
-document.querySelector('#address').value = 'left:' + turnOn.style.left + '; top:' + turnOn.style.top;
+var resetForm = document.querySelector('.ad-form__reset');
+
+resetForm.addEventListener('click', function () {
+  document.querySelector('#address').value = parseInt(turnOn.style.left, 10) + ' ' + parseInt(turnOn.style.top, 10);
+  document.querySelector('#title').value = '';
+  document.querySelector('#price').value = '';
+  document.querySelector('#type').value = 'flat';
+  document.querySelector('#room_number').value = '1';
+  document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+  mainPin.classList.add('map--faded');
+  openForm.classList.add('ad-form--disabled');
+  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (formEl) {
+    formEl.style.display = 'none';
+  });
+});
+
+document.querySelector('#address').value = parseInt(turnOn.style.left, 10) + ' ' + parseInt(turnOn.style.top, 10);
 
 var mapPins = document.querySelector('.map__pins');
 
 mapPins.addEventListener('click', function (event) {
   var target = event.target;
-  if (!target.tagName === 'IMG' || !target.tagName === 'BUTTON') {
-    return;
-  } else {
+  if (target.tagName === 'IMG' || target.tagName === 'BUTTON') {
     var offerId = target.id;
     fragmentWithOffers.appendChild(renderOffer(offers[offerId]));
     if (document.querySelector('.map__filters-container').childElementCount > 0) {
@@ -219,3 +250,85 @@ mapPins.addEventListener('click', function (event) {
   });
 
 });
+
+var roomNumber = document.querySelector('#room_number');
+var maxGuest = document.querySelector('#capacity');
+
+roomNumber.addEventListener('change', function () {
+  if (roomNumber.value === '1') {
+    maxGuest.options[0].disabled = true;
+    maxGuest.options[1].disabled = true;
+    maxGuest.options[2].disabled = false;
+    maxGuest.options[3].disabled = true;
+    maxGuest.value = 1;
+  }
+  if (roomNumber.value === '2') {
+    maxGuest.options[0].disabled = true;
+    maxGuest.options[1].disabled = false;
+    maxGuest.options[2].disabled = false;
+    maxGuest.options[3].disabled = true;
+    maxGuest.value = 1;
+  }
+  if (roomNumber.value === '3') {
+    maxGuest.options[0].disabled = false;
+    maxGuest.options[1].disabled = false;
+    maxGuest.options[2].disabled = false;
+    maxGuest.options[3].disabled = true;
+    maxGuest.value = 1;
+  }
+  if (roomNumber.value === '100') {
+    maxGuest.options[0].disabled = true;
+    maxGuest.options[1].disabled = true;
+    maxGuest.options[2].disabled = true;
+    maxGuest.options[3].disabled = false;
+    maxGuest.value = 0;
+  }
+});
+
+var timein = document.querySelector('#timein');
+var timeout = document.querySelector('#timeout');
+
+timein.addEventListener('change', function () {
+  timeout.value = timein.value;
+});
+
+timeout.addEventListener('change', function () {
+  timein.value = timeout.value;
+});
+
+var tempSuccess = document.querySelector('#success');
+var success = tempSuccess.content.querySelector('.success');
+
+
+var submitForm = document.querySelector('.ad-form__submit');
+submitForm.addEventListener('click', function () {
+  document.querySelector('#address').value = parseInt(turnOn.style.left, 10) + ' ' + parseInt(turnOn.style.top, 10);
+  document.querySelector('#title').value = '';
+  document.querySelector('#price').value = '';
+  document.querySelector('#type').value = 'flat';
+  document.querySelector('#room_number').value = '1';
+  document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+  mainPin.classList.add('map--faded');
+  openForm.classList.add('ad-form--disabled');
+  document.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (formEl) {
+    formEl.style.display = 'none';
+  });
+  document.querySelector('main').appendChild(success.cloneNode(true));
+  document.querySelector('main .success').setAttribute('tabindex', 0);
+  document.querySelectorAll('.ad-form__element').forEach(function (formEl) {
+    formEl.disabled = 'true';
+  });
+
+  document.querySelector('main .success').addEventListener('click', function () {
+    document.querySelector('main .success').remove();
+    turnOnTheLight();
+  });
+
+  document.querySelector('main .success').addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC) {
+      document.querySelector('main .success').remove();
+      turnOnTheLight();
+    }
+  });
+});
+
