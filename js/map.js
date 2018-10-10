@@ -1,6 +1,7 @@
 'use strict';
 
 var ESC = 27;
+var pinHight = 44;
 var maxCost = 1000000;
 var minCost = 1000;
 var maxLocalX = 1000;
@@ -304,13 +305,11 @@ var success = tempSuccess.content.querySelector('.success');
   var field = document.querySelector('.map__overlay');
 
   var limits = {
-
-  top: field.offsetTop,
-  right: field.offsetWidth + field.offsetLeft,
-  bottom: field.offsetHeight + field.offsetTop,
-  left: field.offsetLeft
-};
-console.log(limits.right);
+    top: minLocalY - pinHight,
+    right: field.offsetWidth + field.offsetLeft,
+    bottom: maxLocalY,
+    left: field.offsetLeft
+  };
   mainElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
@@ -325,7 +324,6 @@ console.log(limits.right);
       moveEvt.preventDefault();
       dragged = true;
 
-
       var shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
@@ -335,27 +333,22 @@ console.log(limits.right);
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-      if (mainElement.style.left < limits.left ) {
-        mainElement.style.left = 0 + 'px';
-        document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
-        console.log(limits.left);
-      // } else if (mainElement.style.left > '1120' ) {
-        // mainElement.style.left = (mainElement.offsetLeft - shift.x) + 'px';
-        // mainElement.style.left = '1120' + 'px';
-        // document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
-        // console.log (shift.x);
-      // } else if (mainElement.style.top < '1' ) {
-        // mainElement.style.top = 1 + 'px';
-        // document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
-        // console.log (shift.x);
-      // }else if (mainElement.style.top < '1' ) {
-        // mainElement.style.top = 1 + 'px';
-        // document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
-        // console.log (shift.x);
-      }else {
-      mainElement.style.top = (mainElement.offsetTop - shift.y) + 'px';
-      mainElement.style.left = (mainElement.offsetLeft - shift.x) + 'px';
-      document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
+      if (parseInt(mainElement.style.left, 10) < limits.left) {
+        mainElement.style.left = limits.left + 'px';
+        document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
+      } else if (parseInt(mainElement.style.left, 10) > limits.right) {
+        mainElement.style.left = limits.right + 'px';
+        document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
+      } else if (parseInt(mainElement.style.top, 10) < limits.top) {
+        mainElement.style.top = limits.top + 'px';
+        document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
+      } else if (parseInt(mainElement.style.top, 10) > limits.bottom) {
+        mainElement.style.top = limits.bottom + 'px';
+        document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
+      } else {
+        mainElement.style.top = (mainElement.offsetTop - shift.y) + 'px';
+        mainElement.style.left = (mainElement.offsetLeft - shift.x) + 'px';
+        document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
       }
     };
 
