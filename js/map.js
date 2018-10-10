@@ -299,6 +299,87 @@ timeout.addEventListener('change', function () {
 var tempSuccess = document.querySelector('#success');
 var success = tempSuccess.content.querySelector('.success');
 
+(function () {
+  var mainElement = document.querySelector('.map__pin--main');
+  var field = document.querySelector('.map__overlay');
+
+  var limits = {
+
+  top: field.offsetTop,
+  right: field.offsetWidth + field.offsetLeft,
+  bottom: field.offsetHeight + field.offsetTop,
+  left: field.offsetLeft
+};
+console.log(limits.right);
+  mainElement.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var dragged = false;
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      dragged = true;
+
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+      if (mainElement.style.left < limits.left ) {
+        mainElement.style.left = 0 + 'px';
+        document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
+        console.log(limits.left);
+      // } else if (mainElement.style.left > '1120' ) {
+        // mainElement.style.left = (mainElement.offsetLeft - shift.x) + 'px';
+        // mainElement.style.left = '1120' + 'px';
+        // document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
+        // console.log (shift.x);
+      // } else if (mainElement.style.top < '1' ) {
+        // mainElement.style.top = 1 + 'px';
+        // document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
+        // console.log (shift.x);
+      // }else if (mainElement.style.top < '1' ) {
+        // mainElement.style.top = 1 + 'px';
+        // document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
+        // console.log (shift.x);
+      }else {
+      mainElement.style.top = (mainElement.offsetTop - shift.y) + 'px';
+      mainElement.style.left = (mainElement.offsetLeft - shift.x) + 'px';
+      document.querySelector('#address').value = parseInt(mainElement.style.left, 10) + ' ' + parseInt(mainElement.style.top, 10);
+      }
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      if (dragged) {
+        var onClickPreventDefault = function (evte) {
+          evte.preventDefault();
+          mainElement.removeEventListener('click', onClickPreventDefault);
+        };
+        mainElement.addEventListener('click', onClickPreventDefault);
+      }
+
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+})();
 
 var submitForm = document.querySelector('.ad-form__submit');
 submitForm.addEventListener('click', function () {
