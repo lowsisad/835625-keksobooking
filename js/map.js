@@ -306,10 +306,9 @@ var success = tempSuccess.content.querySelector('.success');
   var field = document.querySelector('.map__overlay');
 
   var limits = {
-    // top: minLocalY - pinHight,
-    top: field.offsetTop,
+    top: minLocalY - pinHight,
     right: field.offsetWidth + field.offsetLeft,
-    bottom: maxLocalY,
+    bottom: maxLocalY - pinHight,
     left: field.offsetLeft
   };
   mainElement.addEventListener('mousedown', function (evt) {
@@ -336,34 +335,34 @@ var success = tempSuccess.content.querySelector('.success');
         y: moveEvt.clientY
       };
 
-      var newLocation = {
+      var Location = {
         x: 0,
         y: 0
       };
 
 
       if ((mainElement.offsetLeft - shift.x) > limits.right - pinWidth) {
-        newLocation.x = limits.right - pinWidth;
+        Location.x = limits.right - pinWidth;
       } else if ((mainElement.offsetLeft - shift.x) > limits.left) {
-        newLocation.x = mainElement.offsetLeft - shift.x;
-      } else if ((mainElement.offsetLeft - shift.x) > limits.right ) {
-        newLocation.x = limits.right;
+        Location.x = mainElement.offsetLeft - shift.x;
+      } else if ((mainElement.offsetLeft - shift.x) > limits.right) {
+        Location.x = limits.right;
       }
 
-      if ((mainElement.offsetTop - shift.y) > limits.bottom ) {
-        newLocation.y = limits.bottom;
-      } else if ((mainElement.offsetTop - shift.y) <= (limits.top + minLocalY + pinHight)) {
-        newLocation.y = limits.top + minLocalY + pinHight;
-      } else if ((mainElement.offsetTop - shift.y) > (limits.top + minLocalY + pinHight)) {
-        newLocation.y = mainElement.offsetTop - shift.y;
+      if ((mainElement.offsetTop - shift.y) > limits.bottom) {
+        Location.y = limits.bottom;
+      } else if ((mainElement.offsetTop - shift.y) <= (limits.top)) {
+        Location.y = limits.top;
+      } else if ((mainElement.offsetTop - shift.y) > (limits.top)) {
+        Location.y = mainElement.offsetTop - shift.y;
       }
 
-      relocate(newLocation);
+      relocate(Location);
 
       function relocate(newLocation) {
         mainElement.style.left = newLocation.x + 'px';
         mainElement.style.top = newLocation.y + 'px';
-        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10)  ) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
+        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10)) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
       }
 
     };
@@ -381,7 +380,6 @@ var success = tempSuccess.content.querySelector('.success');
         };
         mainElement.addEventListener('click', onClickPreventDefault);
       }
-
     };
 
     document.addEventListener('mousemove', onMouseMove);
