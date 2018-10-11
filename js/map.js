@@ -306,7 +306,8 @@ var success = tempSuccess.content.querySelector('.success');
   var field = document.querySelector('.map__overlay');
 
   var limits = {
-    top: minLocalY - pinHight,
+    // top: minLocalY - pinHight,
+    top: field.offsetTop,
     right: field.offsetWidth + field.offsetLeft,
     bottom: maxLocalY,
     left: field.offsetLeft
@@ -334,23 +335,37 @@ var success = tempSuccess.content.querySelector('.success');
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-      if (parseInt(mainElement.style.left, 10) <= limits.left) {
-        mainElement.style.left = limits.left + 'px';
-        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10) - pinWidth) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
-      } else if (parseInt(mainElement.style.left, 10) >= limits.right - pinWidth) {
-        mainElement.style.left = limits.right - pinWidth + 'px';
-        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10) - pinWidth) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
-      } else if (parseInt(mainElement.style.top, 10) <= limits.top) {
-        mainElement.style.top = limits.top + 'px';
-        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10) - pinWidth) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
-      } else if (parseInt(mainElement.style.top, 10) >= limits.bottom) {
-        mainElement.style.top = limits.bottom + 'px';
-        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10) - pinWidth) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
-      } else {
-        mainElement.style.top = (mainElement.offsetTop - shift.y) + 'px';
-        mainElement.style.left = (mainElement.offsetLeft - shift.x) + 'px';
-        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10) - pinWidth) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
+
+      var newLocation = {
+        x: 0,
+        y: 0
+      };
+
+
+      if ((mainElement.offsetLeft - shift.x) > limits.right - pinWidth) {
+        newLocation.x = limits.right - pinWidth;
+      } else if ((mainElement.offsetLeft - shift.x) > limits.left) {
+        newLocation.x = mainElement.offsetLeft - shift.x;
+      } else if ((mainElement.offsetLeft - shift.x) > limits.right ) {
+        newLocation.x = limits.right;
       }
+
+      if ((mainElement.offsetTop - shift.y) > limits.bottom ) {
+        newLocation.y = limits.bottom;
+      } else if ((mainElement.offsetTop - shift.y) <= (limits.top + minLocalY + pinHight)) {
+        newLocation.y = limits.top + minLocalY + pinHight;
+      } else if ((mainElement.offsetTop - shift.y) > (limits.top + minLocalY + pinHight)) {
+        newLocation.y = mainElement.offsetTop - shift.y;
+      }
+
+      relocate(newLocation);
+
+      function relocate(newLocation) {
+        mainElement.style.left = newLocation.x + 'px';
+        mainElement.style.top = newLocation.y + 'px';
+        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10)  ) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
+      }
+
     };
 
     var onMouseUp = function (upEvt) {
