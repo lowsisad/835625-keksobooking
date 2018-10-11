@@ -62,105 +62,109 @@
     return array;
   };
 
-  window.getOffers = function () {
-    var offers = [];
-    avatars = getShuffle(avatars);
-    TITLES = getShuffle(TITLES);
-
-    for (var i = 0; i < avatars.length; i++) {
-      SOMEPHOTOS = getShuffle(SOMEPHOTOS);
-      var localX = Math.floor(Math.random() * (maxLocalX));
-      var localY = Math.floor(Math.random() * (maxLocalY - minLocalY) + minLocalY);
-      var Price = Math.floor(Math.random() * (maxCost - minCost) + minCost);
-      var roomsNumber = Math.floor(Math.random() * (maxRooms - minRooms) + minRooms);
-      var guestsNumber = Math.floor(Math.random() * (maxGuests));
-      var getType = TYPES[Object.keys(TYPES)[Math.floor(Math.random() * (Object.keys(TYPES).length))]];
-      var array = {
-        'author': {
-          'avatar': 'img/avatars/user0' + avatars[i] + '.png'
-        },
-        'offer': {
-          'id': i,
-          'title': TITLES[i],
-          'address': localX + ',' + localY,
-          'price': Price,
-          'type': getType,
-          'rooms': roomsNumber,
-          'guests': guestsNumber,
-          'checkin': getElement(CHECKINS),
-          'checkout': getElement(CHECKOUTS),
-          'features': getFewElements(SOMEFEATURES),
-          'description': '',
-          'photos': [SOMEPHOTOS[0], SOMEPHOTOS[1], SOMEPHOTOS[2]],
-        },
-        'location': {
-          'x': localX,
-          'y': localY
-        }
-      };
-      offers.push(array);
-    }
-    return offers;
-  };
-
   var templatePin = document.querySelector('#pin');
   var templatePinAttributes = templatePin.content.querySelector('.map__pin');
   var templatecard = document.querySelector('#card').content.querySelector('.map__card');
 
-  window.mapOffersListElement = document.querySelector('.map__filters-container');
-  window.mapPinsListElement = document.querySelector('.map__pins');
-  window.renderOffer = function (protoOffer) {
-    var offerAtt = templatecard.cloneNode(true);
+  window.dataModule = {
+    'mapOffersListElement': document.querySelector('.map__filters-container'),
+    'mapPinsListElement': document.querySelector('.map__pins'),
+    'renderOffer': function (protoOffer) {
+      var offerAtt = templatecard.cloneNode(true);
 
-    offerAtt.querySelector('.popup__text--address').innerHTML = protoOffer.offer.address;
-    offerAtt.querySelector('.popup__text--price').innerHTML = protoOffer.offer.price + '₽/ночь';
-    offerAtt.querySelector('.popup__type').innerHTML = protoOffer.offer.type;
-    offerAtt.querySelector('.popup__text--capacity').innerHTML = protoOffer.offer.rooms + ' комнаты для ' + protoOffer.offer.guests + ' гостей';
-    offerAtt.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + protoOffer.offer.checkin + ', выезд до ' + protoOffer.offer.checkout;
-    offerAtt.querySelector('.popup__description').innerHTML = protoOffer.offer.description;
-    offerAtt.querySelector('img').src = protoOffer.author.avatar;
-    offerAtt.querySelector('h3').innerHTML = protoOffer.offer.title;
+      offerAtt.querySelector('.popup__text--address').innerHTML = protoOffer.offer.address;
+      offerAtt.querySelector('.popup__text--price').innerHTML = protoOffer.offer.price + '₽/ночь';
+      offerAtt.querySelector('.popup__type').innerHTML = protoOffer.offer.type;
+      offerAtt.querySelector('.popup__text--capacity').innerHTML = protoOffer.offer.rooms + ' комнаты для ' + protoOffer.offer.guests + ' гостей';
+      offerAtt.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + protoOffer.offer.checkin + ', выезд до ' + protoOffer.offer.checkout;
+      offerAtt.querySelector('.popup__description').innerHTML = protoOffer.offer.description;
+      offerAtt.querySelector('img').src = protoOffer.author.avatar;
+      offerAtt.querySelector('h3').innerHTML = protoOffer.offer.title;
 
-    var myNode = offerAtt.querySelector('.popup__features');
-    while (myNode.firstChild) {
-      myNode.removeChild(myNode.firstChild);
+      var myNode = offerAtt.querySelector('.popup__features');
+      while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+      }
+
+      for (var m = 0; m < protoOffer.offer.features.length; m++) {
+        var li = document.createElement('li');
+        li.classList.add('popup__feature');
+        li.classList.add('popup__feature--' + protoOffer.offer.features[m]);
+        offerAtt.querySelector('.popup__features').appendChild(li);
+      }
+      for (var k = 0; k < countOfImg; k++) {
+        var img = document.createElement('img');
+        img.src = protoOffer.offer.photos[k];
+        img.width = '45';
+        img.height = '40';
+        img.classList.add('popup__photo');
+        img.alt = 'Фотография жилья';
+        img.id = protoOffer.offer.id;
+        offerAtt.querySelector('.popup__photos').appendChild(img);
+      }
+      offerAtt.querySelector('.popup__avatar').innerHTML = protoOffer.author.avatar;
+      offerAtt.querySelector('.popup__photos img:first-child').remove();
+
+      return offerAtt;
+    },
+
+    'getOffers': function () {
+      var offers = [];
+      avatars = getShuffle(avatars);
+      TITLES = getShuffle(TITLES);
+
+      for (var i = 0; i < avatars.length; i++) {
+        SOMEPHOTOS = getShuffle(SOMEPHOTOS);
+        var localX = Math.floor(Math.random() * (maxLocalX));
+        var localY = Math.floor(Math.random() * (maxLocalY - minLocalY) + minLocalY);
+        var Price = Math.floor(Math.random() * (maxCost - minCost) + minCost);
+        var roomsNumber = Math.floor(Math.random() * (maxRooms - minRooms) + minRooms);
+        var guestsNumber = Math.floor(Math.random() * (maxGuests));
+        var getType = TYPES[Object.keys(TYPES)[Math.floor(Math.random() * (Object.keys(TYPES).length))]];
+        var array = {
+          'author': {
+            'avatar': 'img/avatars/user0' + avatars[i] + '.png'
+          },
+          'offer': {
+            'id': i,
+            'title': TITLES[i],
+            'address': localX + ',' + localY,
+            'price': Price,
+            'type': getType,
+            'rooms': roomsNumber,
+            'guests': guestsNumber,
+            'checkin': getElement(CHECKINS),
+            'checkout': getElement(CHECKOUTS),
+            'features': getFewElements(SOMEFEATURES),
+            'description': '',
+            'photos': [SOMEPHOTOS[0], SOMEPHOTOS[1], SOMEPHOTOS[2]],
+          },
+          'location': {
+            'x': localX,
+            'y': localY
+          }
+        };
+        offers.push(array);
+      }
+      return offers;
+    },
+
+    'renderPin': function (protoPin) {
+      var pinAtt = templatePinAttributes.cloneNode(true);
+
+      pinAtt.style.left = protoPin.location.x + 'px';
+      pinAtt.style.top = protoPin.location.y + 'px';
+      pinAtt.setAttribute('id', protoPin.offer.id);
+      pinAtt.querySelector('img').src = protoPin.author.avatar;
+      pinAtt.querySelector('img').alt = protoPin.offer.title;
+      pinAtt.querySelector('img').id = protoPin.offer.id;
+      return pinAtt;
     }
-
-    for (var m = 0; m < protoOffer.offer.features.length; m++) {
-      var li = document.createElement('li');
-      li.classList.add('popup__feature');
-      li.classList.add('popup__feature--' + protoOffer.offer.features[m]);
-      offerAtt.querySelector('.popup__features').appendChild(li);
-    }
-    for (var k = 0; k < countOfImg; k++) {
-      var img = document.createElement('img');
-      img.src = protoOffer.offer.photos[k];
-      img.width = '45';
-      img.height = '40';
-      img.classList.add('popup__photo');
-      img.alt = 'Фотография жилья';
-      img.id = protoOffer.offer.id;
-      offerAtt.querySelector('.popup__photos').appendChild(img);
-    }
-    offerAtt.querySelector('.popup__avatar').innerHTML = protoOffer.author.avatar;
-    offerAtt.querySelector('.popup__photos img:first-child').remove();
-
-    return offerAtt;
   };
 
   document.querySelectorAll('.ad-form__element').forEach(function (formEl) {
     formEl.disabled = 'true';
   });
 
-  window.renderPin = function (protoPin) {
-    var pinAtt = templatePinAttributes.cloneNode(true);
 
-    pinAtt.style.left = protoPin.location.x + 'px';
-    pinAtt.style.top = protoPin.location.y + 'px';
-    pinAtt.setAttribute('id', protoPin.offer.id);
-    pinAtt.querySelector('img').src = protoPin.author.avatar;
-    pinAtt.querySelector('img').alt = protoPin.offer.title;
-    pinAtt.querySelector('img').id = protoPin.offer.id;
-    return pinAtt;
-  };
 })();
