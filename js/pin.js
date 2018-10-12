@@ -8,6 +8,9 @@
   var mainElement = document.querySelector('.map__pin--main');
   var field = document.querySelector('.map__overlay');
 
+  for (var i = 0; i < window.map.offers.length; i++) {
+    window.map.fragmentWithPins.appendChild(window.dataModule.renderPin(window.map.offers[i]));
+  }
   var limits = {
     top: minLocalY - pinHight,
     right: field.offsetWidth + field.offsetLeft,
@@ -43,6 +46,12 @@
         y: 0
       };
 
+      var relocate = function (newLocation) {
+        mainElement.style.left = newLocation.x + 'px';
+        mainElement.style.top = newLocation.y + 'px';
+        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10)) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
+      };
+
       if ((mainElement.offsetLeft - shift.x) > limits.right - pinWidth) {
         Location.x = limits.right - pinWidth;
       } else if ((mainElement.offsetLeft - shift.x) > limits.left) {
@@ -60,12 +69,6 @@
       }
 
       relocate(Location);
-
-      function relocate(newLocation) {
-        mainElement.style.left = newLocation.x + 'px';
-        mainElement.style.top = newLocation.y + 'px';
-        document.querySelector('#address').value = (parseInt(mainElement.style.left, 10)) + ' ' + (parseInt(mainElement.style.top, 10) + pinHight);
-      }
 
     };
 

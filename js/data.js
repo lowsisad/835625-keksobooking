@@ -66,6 +66,10 @@
   var templatePinAttributes = templatePin.content.querySelector('.map__pin');
   var templatecard = document.querySelector('#card').content.querySelector('.map__card');
 
+  document.querySelectorAll('.ad-form__element').forEach(function (formEl) {
+    formEl.disabled = 'true';
+  });
+
   window.dataModule = {
     'mapOffersListElement': document.querySelector('.map__filters-container'),
     'mapPinsListElement': document.querySelector('.map__pins'),
@@ -161,10 +165,5 @@
       return pinAtt;
     }
   };
-
-  document.querySelectorAll('.ad-form__element').forEach(function (formEl) {
-    formEl.disabled = 'true';
-  });
-
 
 })();
