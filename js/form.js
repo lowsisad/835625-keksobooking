@@ -46,19 +46,22 @@
   mapPins.addEventListener('click', function (event) {
     var target = event.target;
     if (target.tagName === 'IMG' || target.tagName === 'BUTTON') {
-      var offerId = target.id;
-      fragmentWithOffers.appendChild(window.dataModule.renderOffer(window.map.offers[offerId]));
-      if (document.querySelector('.map__filters-container').childElementCount > 0) {
-        document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+      if ((target.height != 44) && (!(target.classList.contains('map__pin--main')))) {
+        var offerId = target.id;
+        fragmentWithOffers.appendChild(window.dataModule.renderOffer(window.map.offers[offerId]));
+        if (document.querySelector('.map__filters-container').childElementCount > 0) {
+          document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+        }
+        window.dataModule.mapOffersListElement.appendChild(fragmentWithOffers);
       }
-      window.dataModule.mapOffersListElement.appendChild(fragmentWithOffers);
     }
+
     var closeOffer = document.querySelector('.popup__close');
-
-    closeOffer.addEventListener('click', function () {
-      document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
-    });
-
+    if (document.querySelector('.popup__close')) {
+        closeOffer.addEventListener('click', function () {
+            document.querySelector('.map__filters-container').removeChild(document.querySelector('.map__filters-container').lastChild);
+        });
+    }
   });
 
   var roomNumber = document.querySelector('#room_number');
@@ -110,7 +113,7 @@
   var success = tempSuccess.content.querySelector('.success');
 
   var submitForm = document.querySelector('.ad-form__submit');
-  submitForm.addEventListener('click', function () {
+  submitForm.addEventListener('submit', function () {
     document.querySelector('#address').value = parseInt(window.map.turnOn.style.left, 10) + ' ' + parseInt(window.map.turnOn.style.top, 10);
     document.querySelector('#title').value = '';
     document.querySelector('#price').value = '';
